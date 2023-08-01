@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import axios from "axios";
 
 type RegisterForm = {
   name: string;
@@ -14,6 +15,7 @@ export default function Register() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
     <div className="wrapper">
@@ -35,6 +37,27 @@ export default function Register() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+
+              if (isLoading) {
+                return;
+              }
+
+              const handleSubmit = async () => {
+                try {
+                  setIsLoading(true);
+                  await axios.post("/api/register", {
+                    name: form.name,
+                    email: form.email,
+                    password: form.password,
+                  });
+                } catch (error) {
+                  console.log(error);
+                } finally {
+                  setIsLoading(false);
+                }
+              };
+
+              handleSubmit();
             }}
             className="flex flex-col gap-[1rem] mt-[1rem]"
           >
@@ -88,7 +111,9 @@ export default function Register() {
             <button
               type="submit"
               className="button-primary"
-              disabled={!form.name || !form.email || !form.password}
+              disabled={
+                !form.name || !form.email || !form.password || isLoading
+              }
             >
               Buat akun
             </button>

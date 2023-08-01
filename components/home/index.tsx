@@ -39,7 +39,7 @@ export default function Home() {
               materinya dijamin menarik dan bermanfaat!
             </p>
             <div className="flex flex-col gap-[1rem] mt-[1rem]">
-              <Link href="/" className="button-primary">
+              <Link href="/register" className="button-primary">
                 Mulai belajar
               </Link>
               <Link href="/" className="button-secondary">
@@ -123,7 +123,7 @@ export default function Home() {
             Yuk, belajar sekarang di kodekodean.id!
           </h1>
           <div className="mt-[1rem]">
-            <Link href="/" className="button-primary block">
+            <Link href="/register" className="button-primary block">
               Mulai belajar
             </Link>
           </div>
