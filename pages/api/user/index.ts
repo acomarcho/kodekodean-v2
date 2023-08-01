@@ -4,9 +4,9 @@ import type {
   User,
   GetUserResponse,
 } from "@/lib/constants/responses";
-import { PrismaClient } from "@prisma/client";
 import jwt from "jwt-simple";
 import { extractToken } from "@/lib/utils";
+import { prisma } from "@/lib/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,8 +30,6 @@ export default async function handler(
     } catch (error) {
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
-
-    const prisma = new PrismaClient();
 
     const user = await prisma.user.findUnique({
       where: {

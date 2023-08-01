@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { LoginRequest } from "@/lib/constants/requests";
 import type { LoginResponse, ErrorResponse } from "@/lib/constants/responses";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jwt-simple";
 import { verify } from "hcaptcha";
-import { captchaKey } from "@/lib/constants/hcaptcha";
+import { prisma } from "@/lib/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,8 +33,6 @@ export default async function handler(
     if (!success) {
       return res.status(400).json({ message: "Token hCaptcha tidak valid." });
     }
-
-    const prisma = new PrismaClient();
 
     const user = await prisma.user.findUnique({
       where: {
