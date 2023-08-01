@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import { MantineProvider } from "@mantine/core";
+import UserProvider from "@/lib/contexts/user/provider";
 import Head from "next/head";
 import { Notifications } from "@mantine/notifications";
 
@@ -26,8 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
           withNormalizeCSS
           theme={{ colorScheme: "dark" }}
         >
-          <Notifications position="top-center" />
-          <Component {...pageProps} />
+          <UserProvider>
+            <Notifications position="top-center" />
+            <Component {...pageProps} />
+          </UserProvider>
         </MantineProvider>
       </main>
     </>

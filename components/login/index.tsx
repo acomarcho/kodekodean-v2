@@ -5,6 +5,7 @@ import axios from "axios";
 import { showSuccess, showError } from "@/lib/notifications";
 import { LoadingOverlay } from "@mantine/core";
 import { useRouter } from "next/router";
+import { LoginResponse } from "@/lib/constants/responses";
 
 type LoginForm = {
   email: string;
@@ -53,14 +54,18 @@ export default function Login() {
               const handleSubmit = async () => {
                 try {
                   setIsLoading(true);
-                  await axios.post("/api/login", {
-                    email: form.email,
-                    password: form.password,
-                  });
+                  const { data } = await axios.post<LoginResponse>(
+                    "/api/login",
+                    {
+                      email: form.email,
+                      password: form.password,
+                    }
+                  );
                   showSuccess(
                     "Berhasil masuk ke dalam akun. Selamat datang di kodekodean.id!"
                   );
-                  // router.push("/login");
+                  localStorage.setItem("token", data.token);
+                  router.push("/");
                 } catch (error) {
                   if (axios.isAxiosError(error)) {
                     showError(
