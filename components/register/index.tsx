@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { showSuccess, showError } from "@/lib/notifications";
 
 type RegisterForm = {
   name: string;
@@ -50,8 +51,16 @@ export default function Register() {
                     email: form.email,
                     password: form.password,
                   });
+                  showSuccess(
+                    "Berhasil mendaftarkan akun! Selamat datang di kodekodean.id!"
+                  );
                 } catch (error) {
-                  console.log(error);
+                  if (axios.isAxiosError(error)) {
+                    showError(
+                      error.response?.data.message ||
+                        "Terjadi kesalahan pada server."
+                    );
+                  }
                 } finally {
                   setIsLoading(false);
                 }

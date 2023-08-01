@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import { MantineProvider } from "@mantine/core";
 import Head from "next/head";
+import { Notifications } from "@mantine/notifications";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
           withNormalizeCSS
           theme={{ colorScheme: "dark" }}
         >
+          <Notifications position="top-center" />
           <Component {...pageProps} />
         </MantineProvider>
       </main>
