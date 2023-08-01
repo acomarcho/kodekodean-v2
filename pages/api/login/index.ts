@@ -4,6 +4,8 @@ import type { LoginResponse, ErrorResponse } from "@/lib/constants/responses";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jwt-simple";
+import { verify } from "hcaptcha";
+import { captchaKey } from "@/lib/constants/hcaptcha";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,8 +22,16 @@ export default async function handler(
   if (!request.password) {
     return res.status(400).json({ message: "Password wajib diisi." });
   }
+  if (!request.token) {
+    return res.status(400).json({ message: "Token wajib diisi." });
+  }
 
   try {
+    const { success } = await verify(captchaKey, request.token);
+    if (!success) {
+      return res.status(400).json({ message: "Token hCaptcha tidak valid." });
+    }
+
     const prisma = new PrismaClient();
 
     const user = await prisma.user.findUnique({

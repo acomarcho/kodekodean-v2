@@ -63,6 +63,7 @@ export default function Register() {
                     name: form.name,
                     email: form.email,
                     password: form.password,
+                    token: form.token,
                   });
                   showSuccess(
                     "Berhasil mendaftarkan akun! Silakan masuk ke akun Anda!"

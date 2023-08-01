@@ -65,6 +65,7 @@ export default function Login() {
                     {
                       email: form.email,
                       password: form.password,
+                      token: form.token,
                     }
                   );
                   showSuccess(
