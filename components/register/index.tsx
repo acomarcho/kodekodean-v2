@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { showSuccess, showError } from "@/lib/notifications";
+import { LoadingOverlay } from "@mantine/core";
 
 type RegisterForm = {
   name: string;
@@ -18,8 +19,11 @@ export default function Register() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const loadingFlag = isLoading;
+
   return (
     <div className="wrapper">
+      <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
       <div className="flex items-center">
         <div className="lg:w-[50%]">
           <h1 className="heading text-white">
