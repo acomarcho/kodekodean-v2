@@ -19,7 +19,7 @@
     @apply max-w-[1160px] mx-auto p-[2rem];
   }
   .button-primary {
-    @apply bg-primary px-[1rem] py-[0.5rem] font-inter text-white font-bold text-[1rem] transition-all hover:bg-primaryhover text-center;
+    @apply bg-primary px-[1rem] py-[0.5rem] font-inter text-white font-bold text-[1rem] transition-all hover:bg-primaryhover text-center disabled:bg-blue-300;
   }
   .button-secondary {
     @apply bg-none px-[1rem] py-[0.5rem] font-inter text-white font-bold border-white border-2 transition-all hover:border-lightgray text-center;
