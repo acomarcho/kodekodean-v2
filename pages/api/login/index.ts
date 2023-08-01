@@ -27,7 +27,10 @@ export default async function handler(
   }
 
   try {
-    const { success } = await verify(captchaKey, request.token);
+    const { success } = await verify(
+      process.env.HCAPTCHA_SECRET || "kodekodean",
+      request.token
+    );
     if (!success) {
       return res.status(400).json({ message: "Token hCaptcha tidak valid." });
     }
