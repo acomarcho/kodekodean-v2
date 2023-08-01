@@ -1,7 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+
+type LoginForm = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
+  const [form, setForm] = useState<LoginForm>({
+    email: "",
+    password: "",
+  });
+
   return (
     <div className="wrapper">
       <div className="flex items-center">
@@ -28,13 +39,17 @@ export default function Login() {
           >
             <div className="flex flex-col gap-[0.25rem">
               <label htmlFor="email" className="paragraph font-bold text-white">
-                Email
+                Email <span className="text-red">*</span>
               </label>
               <input
                 type="email"
                 id="email"
                 className="bg-white px-[1rem] py-[0.5rem] paragraph text-black"
                 placeholder="john@doe.com"
+                value={form.email}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.currentTarget.value })
+                }
               />
             </div>
             <div className="flex flex-col gap-[0.25rem">
@@ -42,15 +57,23 @@ export default function Login() {
                 htmlFor="password"
                 className="paragraph font-bold text-white"
               >
-                Password
+                Password <span className="text-red">*</span>
               </label>
               <input
                 type="password"
                 id="password"
                 className="bg-white px-[1rem] py-[0.5rem] paragraph text-black"
+                value={form.password}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.currentTarget.value })
+                }
               />
             </div>
-            <button type="submit" className="button-primary">
+            <button
+              type="submit"
+              className="button-primary"
+              disabled={!form.email || !form.password}
+            >
               Masuk
             </button>
           </form>
