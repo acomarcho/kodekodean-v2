@@ -104,7 +104,7 @@ export default function Home() {
               Kami memiliki keyakinan bahwa edukasi yang baik layak dimiliki
               oleh setiap kalangan masyarakat. Oleh karena itu, kami berusaha
               untuk menyediakan konten pembelajaran secara{" "}
-              <span className="font-bold">gratis</span>.
+              <span className="font-bold text-white">gratis</span>.
             </p>
           </div>
           <Image
