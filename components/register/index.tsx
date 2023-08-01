@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { showSuccess, showError } from "@/lib/notifications";
 import { LoadingOverlay } from "@mantine/core";
+import { useRouter } from "next/router";
 
 type RegisterForm = {
   name: string;
@@ -20,6 +21,8 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loadingFlag = isLoading;
+
+  const router = useRouter();
 
   return (
     <div className="wrapper">
@@ -56,8 +59,9 @@ export default function Register() {
                     password: form.password,
                   });
                   showSuccess(
-                    "Berhasil mendaftarkan akun! Selamat datang di kodekodean.id!"
+                    "Berhasil mendaftarkan akun! Silakan masuk ke akun Anda!"
                   );
+                  router.push("/login");
                 } catch (error) {
                   if (axios.isAxiosError(error)) {
                     showError(
