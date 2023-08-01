@@ -79,6 +79,7 @@ export default function Register() {
                 } finally {
                   setIsLoading(false);
                   captchaRef.current?.resetCaptcha();
+                  setForm({ ...form, token: "" });
                 }
               };
 

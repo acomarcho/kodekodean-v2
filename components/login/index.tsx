@@ -82,6 +82,8 @@ export default function Login() {
                   }
                 } finally {
                   setIsLoading(false);
+                  captchaRef.current?.resetCaptcha();
+                  setForm({ ...form, token: "" });
                 }
               };
 
