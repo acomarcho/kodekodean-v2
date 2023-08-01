@@ -1,6 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import axios from "axios";
+import { showSuccess, showError } from "@/lib/notifications";
+import { LoadingOverlay } from "@mantine/core";
+import { useRouter } from "next/router";
 
 type LoginForm = {
   email: string;
@@ -13,8 +17,15 @@ export default function Login() {
     password: "",
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const loadingFlag = isLoading;
+
+  const router = useRouter();
+
   return (
     <div className="wrapper">
+      <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
       <div className="flex items-center">
         <div className="lg:w-[50%]">
           <h1 className="heading text-white">
@@ -34,6 +45,35 @@ export default function Login() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+
+              if (isLoading) {
+                return;
+              }
+
+              const handleSubmit = async () => {
+                try {
+                  setIsLoading(true);
+                  await axios.post("/api/login", {
+                    email: form.email,
+                    password: form.password,
+                  });
+                  showSuccess(
+                    "Berhasil masuk ke dalam akun. Selamat datang di kodekodean.id!"
+                  );
+                  // router.push("/login");
+                } catch (error) {
+                  if (axios.isAxiosError(error)) {
+                    showError(
+                      error.response?.data.message ||
+                        "Terjadi kesalahan pada server."
+                    );
+                  }
+                } finally {
+                  setIsLoading(false);
+                }
+              };
+
+              handleSubmit();
             }}
             className="flex flex-col gap-[1rem] mt-[1rem]"
           >
