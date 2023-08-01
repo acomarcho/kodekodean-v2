@@ -1,10 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { UserContext } from "@/lib/contexts/user/context";
+import { showSuccess } from "@/lib/notifications";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
   const [navHeight, setNavHeight] = useState(0);
   const navRef = useRef<HTMLDivElement>(null);
+  const user = useContext(UserContext);
+  const router = useRouter();
 
   useEffect(() => {
     setNavHeight(navRef.current?.getBoundingClientRect().height || 0);
@@ -25,6 +30,18 @@ export default function Navbar() {
               alt="kodekodean.id"
             />
           </Link>
+          {user.id !== -1 && (
+            <button
+              className="button-primary"
+              onClick={() => {
+                localStorage.removeItem("token");
+                showSuccess("Sampai jumpa lagi di lain kesempatan!");
+                router.push("/login");
+              }}
+            >
+              Keluar
+            </button>
+          )}
         </div>
       </nav>
       <div style={{ marginTop: navHeight }} />
