@@ -79,6 +79,28 @@ export default function Home() {
           className="mx-auto"
         />
       </div>
+      <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center mt-[2rem]">
+        <div>
+          <h1 className="heading text-white">
+            <span className="text-cyan">Harga yang sangat cocok</span> untuk{" "}
+            <span className="text-purple">kalangan mahasiswa</span>. Tidak perlu
+            mengeluarkan banyak uang!
+          </h1>
+          <p className="paragraph text-lightgray mt-[1rem]">
+            Kami memiliki keyakinan bahwa edukasi yang baik layak dimiliki oleh
+            setiap kalangan masyarakat. Oleh karena itu, kami berusaha untuk
+            menyediakan konten pembelajaran secara{" "}
+            <span className="font-bold">gratis</span>.
+          </p>
+        </div>
+        <Image
+          src="/images/hero_wallet.png"
+          alt=""
+          width={316}
+          height={315}
+          className="mx-auto"
+        />
+      </div>
     </div>
   );
 }
