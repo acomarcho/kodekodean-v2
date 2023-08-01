@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="wrapper">
+    <div className="wrapper relative">
       <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
         <div>
           <h1 className="heading text-white">
@@ -100,6 +100,18 @@ export default function Home() {
           height={315}
           className="mx-auto"
         />
+      </div>
+      <div className="fixed left-0 bottom-0 w-full bg-darkgray">
+        <div className="max-w-[1160px] mx-auto p-[2rem]">
+          <h1 className="heading text-white text-center">
+            Yuk, belajar sekarang di kodekodean.id!
+          </h1>
+          <div className="mt-[1rem]">
+            <Link href="/" className="button-primary block">
+              Mulai belajar
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
