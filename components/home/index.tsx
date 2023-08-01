@@ -118,7 +118,7 @@ export default function Home() {
       </Slide>
       <div style={{ marginTop: `${footerHeight}px` }} />
       <div className="fixed left-0 bottom-0 w-full bg-darkgray" ref={footerRef}>
-        <div className="max-w-[1160px] mx-auto p-[2rem]">
+        <div className="max-w-[1160px] mx-auto px-[2rem] py-[1rem]">
           <h1 className="heading text-white text-center">
             Yuk, belajar sekarang di kodekodean.id!
           </h1>
