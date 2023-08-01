@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import { showSuccess, showError } from "@/lib/notifications";
 import { LoadingOverlay } from "@mantine/core";
 import { useRouter } from "next/router";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { captchaKey } from "@/lib/constants/hcaptcha";
 
 type RegisterForm = {
   name: string;
   email: string;
   password: string;
+  token: string;
 };
 
 export default function Register() {
@@ -17,12 +20,15 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
+    token: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loadingFlag = isLoading;
 
   const router = useRouter();
+
+  const captchaRef = useRef<HCaptcha>(null);
 
   return (
     <div className="wrapper">
@@ -71,6 +77,7 @@ export default function Register() {
                   }
                 } finally {
                   setIsLoading(false);
+                  captchaRef.current?.resetCaptcha();
                 }
               };
 
@@ -125,11 +132,30 @@ export default function Register() {
                 }
               />
             </div>
+            <div className="flex flex-col gap-[0.25rem">
+              <label
+                htmlFor="captcha"
+                className="paragraph font-bold text-white"
+              >
+                Captcha <span className="text-red">*</span>
+              </label>
+              <HCaptcha
+                sitekey={captchaKey}
+                onVerify={(v) => {
+                  setForm({ ...form, token: v });
+                }}
+                ref={captchaRef}
+              />
+            </div>
             <button
               type="submit"
               className="button-primary"
               disabled={
-                !form.name || !form.email || !form.password || isLoading
+                !form.name ||
+                !form.email ||
+                !form.password ||
+                !form.token ||
+                isLoading
               }
             >
               Buat akun

@@ -1,21 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import { showSuccess, showError } from "@/lib/notifications";
 import { LoadingOverlay } from "@mantine/core";
 import { useRouter } from "next/router";
 import { LoginResponse } from "@/lib/constants/responses";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { captchaKey } from "@/lib/constants/hcaptcha";
 
 type LoginForm = {
   email: string;
   password: string;
+  token: string;
 };
 
 export default function Login() {
   const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
+    token: "",
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -23,6 +27,8 @@ export default function Login() {
   const loadingFlag = isLoading;
 
   const router = useRouter();
+
+  const captchaRef = useRef<HCaptcha>(null);
 
   return (
     <div className="wrapper">
@@ -114,10 +120,27 @@ export default function Login() {
                 }
               />
             </div>
+            <div className="flex flex-col gap-[0.25rem">
+              <label
+                htmlFor="captcha"
+                className="paragraph font-bold text-white"
+              >
+                Captcha <span className="text-red">*</span>
+              </label>
+              <HCaptcha
+                sitekey={captchaKey}
+                onVerify={(v) => {
+                  setForm({ ...form, token: v });
+                }}
+                ref={captchaRef}
+              />
+            </div>
             <button
               type="submit"
               className="button-primary"
-              disabled={!form.email || !form.password}
+              disabled={
+                !form.email || !form.password || !form.token || isLoading
+              }
             >
               Masuk
             </button>
