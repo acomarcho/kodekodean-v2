@@ -3,6 +3,7 @@ import type { LoginRequest } from "@/lib/constants/requests";
 import type { LoginResponse, ErrorResponse } from "@/lib/constants/responses";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import jwt from "jwt-simple";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,7 +42,9 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    return res.status(200).json({ token: "Test token" });
+    const token = jwt.encode(user, process.env.JWT_SECRET || "kodekodean");
+
+    return res.status(200).json({ token });
   } catch (error) {
     return res.status(500).json({ message: "Terjadi kesalahan pada sistem." });
   }
