@@ -1,7 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useViewportSize } from "@mantine/hooks";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
+  const { height, width } = useViewportSize();
+
+  const [footerHeight, setFooterHeight] = useState(0);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setFooterHeight(footerRef.current?.getBoundingClientRect().height || 0);
+  }, [height, width]);
+
   return (
     <div className="wrapper relative">
       <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
@@ -101,7 +112,8 @@ export default function Home() {
           className="mx-auto"
         />
       </div>
-      <div className="fixed left-0 bottom-0 w-full bg-darkgray">
+      <div style={{ marginTop: `${footerHeight}px` }} />
+      <div className="fixed left-0 bottom-0 w-full bg-darkgray" ref={footerRef}>
         <div className="max-w-[1160px] mx-auto p-[2rem]">
           <h1 className="heading text-white text-center">
             Yuk, belajar sekarang di kodekodean.id!
