@@ -7,9 +7,10 @@ import { useSingleChunk } from "@/lib/hooks/chunk/use-single-chunk";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Navbar from "../navbar";
-import { IconMenu2 } from "@tabler/icons-react";
+import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useViewportSize } from "@mantine/hooks";
 import { Drawer } from "@mantine/core";
+import MarkdownRenderer from "./markdown-renderer";
 
 export default function SingleModule() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function SingleModule() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full bg-darkgray" ref={navRef}>
+      <div className="fixed top-0 left-0 w-full bg-darkgray z-10" ref={navRef}>
         <div className="wrapper">
           <div className="flex justify-between items-center">
             <h1 className="heading text-white max-w-[75%]">
@@ -79,6 +80,9 @@ export default function SingleModule() {
         position="right"
       >
         <div className="p-[1rem] flex flex-col gap-[1rem]">
+          <button onClick={() => setIsDrawerOpen(false)}>
+            <IconX size={32} />
+          </button>
           {module?.chunks.map((chunk, idx) => {
             if (idx <= chunkIdx) {
               return (
@@ -113,8 +117,11 @@ export default function SingleModule() {
       <div style={{ marginTop: `${navHeight}px` }} />
       <div className="wrapper">
         <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
-        <p className="paragraph text-white">{JSON.stringify(module)}</p>
-        <p className="paragraph text-white">{JSON.stringify(chunk)}</p>
+        <h1 className="heading text-white">
+          {(chunk?.rank && `${chunk?.rank}. ${chunk?.title}`) ||
+            "Chunk tidak ditemukan"}
+        </h1>
+        <MarkdownRenderer>{chunk?.content || ""}</MarkdownRenderer>
       </div>
     </>
   );
