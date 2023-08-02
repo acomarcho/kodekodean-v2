@@ -1,14 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useViewportSize } from "@mantine/hooks";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { Slide } from "react-awesome-reveal";
+import { UserContext } from "@/lib/contexts/user/context";
 
 export default function Home() {
   const { height, width } = useViewportSize();
 
   const [footerHeight, setFooterHeight] = useState(0);
   const footerRef = useRef<HTMLDivElement>(null);
+
+  const user = useContext(UserContext);
 
   useEffect(() => {
     setFooterHeight(footerRef.current?.getBoundingClientRect().height || 0);
@@ -39,7 +42,10 @@ export default function Home() {
               materinya dijamin menarik dan bermanfaat!
             </p>
             <div className="flex flex-col gap-[1rem] mt-[1rem]">
-              <Link href="/register" className="button-primary">
+              <Link
+                href={user.id !== -1 ? "/course" : "/register"}
+                className="button-primary"
+              >
                 Mulai belajar
               </Link>
               <Link href="/" className="button-secondary">
