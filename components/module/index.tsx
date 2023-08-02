@@ -12,6 +12,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { Drawer } from "@mantine/core";
 import MarkdownRenderer from "./markdown-renderer";
 import axios from "axios";
+import { log } from "console";
 
 export default function SingleModule() {
   const router = useRouter();
@@ -43,6 +44,14 @@ export default function SingleModule() {
     isChunkLoading,
     isSaving,
   ]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(document.location.search);
+    const chunkIdx = params.get("chunkIdx");
+    if (chunkIdx !== null) {
+      setChunkIdx(parseInt(chunkIdx));
+    }
+  }, [router]);
 
   if (!user.isLoading && user.id === -1) {
     return (
@@ -107,6 +116,13 @@ export default function SingleModule() {
                     setChunkIdx(idx);
                     setIsDrawerOpen(false);
                     window.scrollTo({ top: 0 });
+                    router.push(
+                      `/module/${module.id}`,
+                      `/module/${module.id}?chunkIdx=${idx}`,
+                      {
+                        shallow: true,
+                      }
+                    );
                   }}
                 >
                   {chunk.rank}. {chunk.title}
@@ -121,6 +137,13 @@ export default function SingleModule() {
                     setChunkIdx(idx);
                     setIsDrawerOpen(false);
                     window.scrollTo({ top: 0 });
+                    router.push(
+                      `/module/${module.id}`,
+                      `/module/${module.id}?chunkIdx=${idx}`,
+                      {
+                        shallow: true,
+                      }
+                    );
                   }}
                 >
                   {chunk.rank}. {chunk.title}
@@ -157,6 +180,13 @@ export default function SingleModule() {
             onClick={() => {
               setChunkIdx(chunkIdx - 1);
               window.scrollTo({ top: 0 });
+              router.push(
+                `/module/${module?.id}`,
+                `/module/${module?.id}?chunkIdx=${chunkIdx - 1}`,
+                {
+                  shallow: true,
+                }
+              );
             }}
           >
             Kembali
@@ -193,6 +223,13 @@ export default function SingleModule() {
               } else {
                 setChunkIdx(chunkIdx + 1);
                 window.scrollTo({ top: 0 });
+                router.push(
+                  `/module/${module?.id}`,
+                  `/module/${module?.id}?chunkIdx=${chunkIdx + 1}`,
+                  {
+                    shallow: true,
+                  }
+                );
               }
             }}
             disabled={isChunkLoading}
