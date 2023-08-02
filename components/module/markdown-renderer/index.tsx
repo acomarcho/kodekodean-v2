@@ -11,7 +11,7 @@ export default function MarkdownRenderer({ children }: { children: string }) {
       rehypePlugins={[rehypeRaw]}
       components={{
         h1: ({ children, ...props }) => (
-          <h1 className="heading text-white mt-[1rem]" {...props}>
+          <h1 className="heading text-white mt-[1rem] underline" {...props}>
             {children}
           </h1>
         ),
@@ -24,6 +24,11 @@ export default function MarkdownRenderer({ children }: { children: string }) {
           <p className="paragraph text-lightgray mt-[1rem]" {...props}>
             {children}
           </p>
+        ),
+        a: ({ children, ...props }) => (
+          <a className="paragraph text-primary mt-[1rem] inline-block underline" {...props}>
+            {children}
+          </a>
         ),
         img: ({ alt, ...props }) => (
           <img alt={alt} {...props} className="max-w-full mx-auto mt-[1rem]" />
