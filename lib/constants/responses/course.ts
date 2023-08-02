@@ -1,15 +1,10 @@
+import { Unit } from ".";
+
 export type Course = {
   id: number;
   title: string;
   description: string;
   source: string;
-  rank: number;
-};
-
-export type Unit = {
-  id: number;
-  courseId: number;
-  description: string;
   rank: number;
 };
 
