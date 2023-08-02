@@ -27,10 +27,13 @@ export default function SingleModule() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const navRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const [navHeight, setNavHeight] = useState<number>(0);
+  const [footerHeight, setFooterHeight] = useState<number>(0);
   const { height, width } = useViewportSize();
   useEffect(() => {
     setNavHeight(navRef.current?.getBoundingClientRect().height || 0);
+    setFooterHeight(footerRef.current?.getBoundingClientRect().height || 0);
   }, [
     navRef,
     height,
@@ -141,7 +144,13 @@ export default function SingleModule() {
             "Chunk tidak ditemukan"}
         </h1>
         <MarkdownRenderer>{chunk?.content || ""}</MarkdownRenderer>
-        <div className="flex justify-between mt-[1rem]">
+      </div>
+      <div style={{ marginBottom: `${footerHeight}px` }} />
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-darkgray"
+        ref={footerRef}
+      >
+        <div className="max-w-[1160px] mx-auto px-[2rem] py-[1rem] flex justify-between">
           <button
             className="button-primary"
             disabled={chunkIdx === 0 || isChunkLoading}
