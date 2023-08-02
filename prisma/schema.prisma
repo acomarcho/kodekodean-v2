@@ -17,3 +17,40 @@ model User {
   email     String   @unique
   password  String
 }
+
+model Course {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  source      String
+  rank        Int
+  units       Unit[]
+}
+
+model Unit {
+  id          Int      @id @default(autoincrement())
+  course      Course   @relation(fields: [courseId], references: [id])
+  courseId    Int
+  description String
+  rank        Int
+  modules     Module[]
+}
+
+model Module {
+  id          Int     @id @default(autoincrement())
+  unit        Unit    @relation(fields: [unitId], references: [id])
+  unitId      Int
+  title       String
+  description String
+  rank        Int
+  chunks      Chunk[]
+}
+
+model Chunk {
+  id       Int    @id @default(autoincrement())
+  module   Module @relation(fields: [moduleId], references: [id])
+  moduleId Int
+  title    String
+  content  String
+  rank     Int
+}
