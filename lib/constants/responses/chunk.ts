@@ -5,3 +5,7 @@ export type Chunk = {
   content: string;
   rank: number;
 };
+
+export type GetSingleChunkResponse = {
+  chunk: Chunk;
+};
