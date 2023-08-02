@@ -6,3 +6,4 @@ export * from "./course";
 export * from "./unit";
 export * from "./module";
 export * from "./chunk";
+export * from "./completion";
