@@ -11,6 +11,7 @@ import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useViewportSize } from "@mantine/hooks";
 import { Drawer } from "@mantine/core";
 import MarkdownRenderer from "./markdown-renderer";
+import axios from "axios";
 
 export default function SingleModule() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function SingleModule() {
     module?.chunks[chunkIdx]?.id.toString() || ""
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const navRef = useRef<HTMLDivElement>(null);
   const [navHeight, setNavHeight] = useState<number>(0);
@@ -57,7 +59,8 @@ export default function SingleModule() {
     );
   }
 
-  const loadingFlag = user.isLoading || isModuleLoading || isChunkLoading;
+  const loadingFlag =
+    user.isLoading || isModuleLoading || isChunkLoading || isSaving;
 
   return (
     <>
@@ -148,7 +151,28 @@ export default function SingleModule() {
                 module?.chunks.length &&
                 chunkIdx === module?.chunks.length - 1
               ) {
-                router.push(`/unit/${module?.unitId}`);
+                const put = async () => {
+                  try {
+                    setIsSaving(true);
+                    await axios.put(
+                      `/api/module/${module?.id}/completion`,
+                      {},
+                      {
+                        headers: {
+                          Authorization: `Bearer ${
+                            localStorage.getItem("token") ?? ""
+                          }`,
+                        },
+                      }
+                    );
+                  } catch (error) {
+                  } finally {
+                    setIsSaving(false);
+                    router.push(`/unit/${module?.unitId}`);
+                  }
+                };
+
+                put();
               } else {
                 setChunkIdx(chunkIdx + 1);
                 window.scrollTo({ top: 0 });
