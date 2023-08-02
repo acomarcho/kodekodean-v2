@@ -69,6 +69,34 @@ async function main() {
       },
     ],
   });
+
+  await prisma.module.createMany({
+    data: [
+      {
+        id: 1,
+        unitId: 1,
+        title: "Apa itu paradigma fungsional?",
+        description: "Ketahui apa yang dimaksud dengan paradigma fungsional!",
+        rank: 1,
+      },
+      {
+        id: 2,
+        unitId: 1,
+        title: "Instalasi Haskell",
+        description:
+          "Cara melakukan instalasi compiler Haskell (GHCi) untuk memulai pemrograman dalam Haskell",
+        rank: 2,
+      },
+      {
+        id: 3,
+        unitId: 1,
+        title: "Program Haskell pertama Anda",
+        description:
+          "Buat kalkulator sederhana dalam paradigma fungsional menggunakan Haskell",
+        rank: 3,
+      },
+    ],
+  });
 }
 
 main()
