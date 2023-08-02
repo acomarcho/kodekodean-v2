@@ -1,12 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type {
-  ErrorResponse,
-  User,
-  GetUserResponse,
-} from "@/lib/constants/responses";
-import jwt from "jwt-simple";
-import { extractToken } from "@/lib/utils";
-import { prisma } from "@/lib/db";
+import type { ErrorResponse, GetUserResponse } from "@/lib/constants/responses";
+import { checkAuth } from "@/lib/utils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,20 +16,8 @@ export default async function handler(
   }
 
   try {
-    const token = extractToken(headers.authorization);
+    const user = await checkAuth(headers.authorization);
 
-    let decodedJwt: User;
-    try {
-      decodedJwt = jwt.decode(token, process.env.JWT_SECRET || "kodekodean");
-    } catch (error) {
-      return res.status(401).json({ message: "Identitas Anda salah." });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        email: decodedJwt!.email,
-      },
-    });
     if (!user) {
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
