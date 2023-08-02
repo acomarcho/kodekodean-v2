@@ -1,4 +1,4 @@
-import { Unit } from ".";
+import { Unit, Module } from ".";
 
 export type Course = {
   id: number;
@@ -12,10 +12,14 @@ export type CourseWithUnits = Course & {
   units: Unit[];
 };
 
+export type CourseWithUnitsWithModules = Course & {
+  units: (Unit & { modules: Module[] })[];
+};
+
 export type GetCoursesResponse = {
   courses: Course[];
 };
 
 export type GetSingleCourseResponse = {
-  course: CourseWithUnits | null;
+  course: CourseWithUnitsWithModules | null;
 };

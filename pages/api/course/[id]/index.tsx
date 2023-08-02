@@ -37,6 +37,13 @@ export default async function handler(
           orderBy: {
             rank: "asc",
           },
+          include: {
+            modules: {
+              orderBy: {
+                rank: "asc",
+              },
+            },
+          },
         },
       },
     });
