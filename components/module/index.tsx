@@ -20,7 +20,7 @@ export default function SingleModule() {
   );
   const [chunkIdx, setChunkIdx] = useState(0);
   const { chunk, isLoading: isChunkLoading } = useSingleChunk(
-    module?.chunks[chunkIdx].id.toString() || ""
+    module?.chunks[chunkIdx]?.id.toString() || ""
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -89,7 +89,11 @@ export default function SingleModule() {
                 <button
                   key={chunk.id}
                   className="button-primary w-full"
-                  onClick={() => setChunkIdx(idx)}
+                  onClick={() => {
+                    setChunkIdx(idx);
+                    setIsDrawerOpen(false);
+                    window.scrollTo({ top: 0 });
+                  }}
                 >
                   {chunk.rank}. {chunk.title}
                 </button>
@@ -99,7 +103,11 @@ export default function SingleModule() {
                 <button
                   key={chunk.id}
                   className="button-secondary w-full"
-                  onClick={() => setChunkIdx(idx)}
+                  onClick={() => {
+                    setChunkIdx(idx);
+                    setIsDrawerOpen(false);
+                    window.scrollTo({ top: 0 });
+                  }}
                 >
                   {chunk.rank}. {chunk.title}
                 </button>
@@ -122,6 +130,37 @@ export default function SingleModule() {
             "Chunk tidak ditemukan"}
         </h1>
         <MarkdownRenderer>{chunk?.content || ""}</MarkdownRenderer>
+        <div className="flex justify-between mt-[1rem]">
+          <button
+            className="button-primary"
+            disabled={chunkIdx === 0 || isChunkLoading}
+            onClick={() => {
+              setChunkIdx(chunkIdx - 1);
+              window.scrollTo({ top: 0 });
+            }}
+          >
+            Kembali
+          </button>
+          <button
+            className="button-primary"
+            onClick={() => {
+              if (
+                module?.chunks.length &&
+                chunkIdx === module?.chunks.length - 1
+              ) {
+                router.push(`/unit/${module?.unitId}`);
+              } else {
+                setChunkIdx(chunkIdx + 1);
+                window.scrollTo({ top: 0 });
+              }
+            }}
+            disabled={isChunkLoading}
+          >
+            {module?.chunks.length && chunkIdx === module?.chunks.length - 1
+              ? "Selesai"
+              : "Lanjut"}
+          </button>
+        </div>
       </div>
     </>
   );
