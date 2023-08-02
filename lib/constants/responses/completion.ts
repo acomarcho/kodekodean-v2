@@ -8,3 +8,7 @@ export type Completion = {
 export type PutCompletionResponse = {
   completion: Completion;
 };
+
+export type GetCompletionsResponse = {
+  completions: Completion[];
+};

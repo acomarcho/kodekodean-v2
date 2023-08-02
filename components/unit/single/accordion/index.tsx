@@ -3,14 +3,30 @@ import { IconChevronDown } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Accordion({ module }: { module: Module }) {
+export default function Accordion({
+  module,
+  completed,
+}: {
+  module: Module;
+  completed: boolean;
+}) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <div className="px-[2rem] py-[1rem] bg-darkgray">
       <div className="flex justify-between items-center">
         <h1 className="heading text-white max-w-[75%]">
-          #{module.rank}. {module.title}
+          {completed && (
+            <>
+              <span className="text-green">#{module.rank}</span>. {module.title}
+            </>
+          )}
+          {!completed && (
+            <>
+              <span className="text-yellow">#{module.rank}</span>.{" "}
+              {module.title}
+            </>
+          )}
         </h1>
         <button
           style={{

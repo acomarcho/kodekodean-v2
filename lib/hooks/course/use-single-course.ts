@@ -13,7 +13,7 @@ export const useSingleCourse = (id: string) => {
     if (!id) {
       return;
     }
-    
+
     const fetch = async () => {
       try {
         setIsLoading(true);

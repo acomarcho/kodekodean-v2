@@ -11,15 +11,22 @@ import Accordion from "./accordion";
 export default function SingleUnit() {
   const router = useRouter();
   const user = useContext(UserContext);
-  const { unit, isLoading: isUnitLoading } = useSingleUnit(
-    router.query.id as string
-  );
+  const {
+    unit,
+    completions,
+    isLoading: isUnitLoading,
+  } = useSingleUnit(router.query.id as string);
 
   if (!user.isLoading && user.id === -1) {
     return <Unauthorized />;
   }
 
   const loadingFlag = user.isLoading || isUnitLoading;
+
+  const relevantCompletions =
+    completions.filter((completion) =>
+      unit?.modules.find((module) => module.id === completion.moduleId)
+    ) || [];
 
   const renderUnit = () => {
     if (loadingFlag) {
@@ -47,15 +54,28 @@ export default function SingleUnit() {
             <h1 className="heading text-white">
               Unit {unit.rank}: {unit.description}
             </h1>
-            {/* <p className="paragraph text-lightgray">
-              Anda sudah menyelesaikan 0/0 modul pada unit ini.
-            </p> */}
+            <p className="paragraph text-lightgray">
+              Anda sudah menyelesaikan {relevantCompletions.length}/
+              {unit.modules.length} modul pada unit ini.
+            </p>
           </div>
           <Image src="/images/course.png" alt="" height={180} width={564} />
         </div>
         <div className="grid grid-cols-1 gap-[1rem] mt-[2rem]">
           {unit.modules.map((module) => {
-            return <Accordion key={module.id} module={module} />;
+            return (
+              <Accordion
+                key={module.id}
+                module={module}
+                completed={
+                  relevantCompletions.find(
+                    (completion) => completion.moduleId == module.id
+                  )
+                    ? true
+                    : false
+                }
+              />
+            );
           })}
         </div>
       </>
