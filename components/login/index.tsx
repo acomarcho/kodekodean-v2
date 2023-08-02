@@ -72,7 +72,7 @@ export default function Login() {
                     "Berhasil masuk ke dalam akun. Selamat datang di kodekodean.id!"
                   );
                   localStorage.setItem("token", data.token);
-                  router.push("/");
+                  router.push("/course");
                 } catch (error) {
                   if (axios.isAxiosError(error)) {
                     showError(
