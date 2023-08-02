@@ -31,7 +31,15 @@ export default function SingleModule() {
   const { height, width } = useViewportSize();
   useEffect(() => {
     setNavHeight(navRef.current?.getBoundingClientRect().height || 0);
-  }, [navRef, height, width]);
+  }, [
+    navRef,
+    height,
+    width,
+    user.isLoading,
+    isModuleLoading,
+    isChunkLoading,
+    isSaving,
+  ]);
 
   if (!user.isLoading && user.id === -1) {
     return (

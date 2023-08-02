@@ -26,7 +26,7 @@ export default function MarkdownRenderer({ children }: { children: string }) {
           </p>
         ),
         a: ({ children, ...props }) => (
-          <a className="paragraph text-primary mt-[1rem] inline-block underline" {...props}>
+          <a className="paragraph text-primary inline-block underline" {...props}>
             {children}
           </a>
         ),
