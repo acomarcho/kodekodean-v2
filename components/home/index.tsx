@@ -129,7 +129,10 @@ export default function Home() {
             Yuk, belajar sekarang di kodekodean.id!
           </h1>
           <div className="mt-[1rem]">
-            <Link href="/register" className="button-primary block">
+            <Link
+              href={user.id !== -1 ? "/course" : "/register"}
+              className="button-primary block"
+            >
               Mulai belajar
             </Link>
           </div>
