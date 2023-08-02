@@ -97,6 +97,25 @@ async function main() {
       },
     ],
   });
+
+  await prisma.chunk.createMany({
+    data: [
+      {
+        id: 1,
+        moduleId: 1,
+        title: "Output pada Python",
+        content: "sample/output.md",
+        rank: 1,
+      },
+      {
+        id: 2,
+        moduleId: 1,
+        title: "Input pada Python",
+        content: "sample/input.md",
+        rank: 2,
+      },
+    ],
+  });
 }
 
 main()
