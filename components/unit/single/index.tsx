@@ -22,6 +22,10 @@ export default function SingleUnit() {
   const loadingFlag = user.isLoading || isUnitLoading;
 
   const renderUnit = () => {
+    if (loadingFlag) {
+      return <></>;
+    }
+
     if (!unit) {
       return (
         <>

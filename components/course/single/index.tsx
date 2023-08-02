@@ -21,6 +21,10 @@ export default function SingleCourse() {
   const loadingFlag = user.isLoading || isCourseLoading;
 
   const renderCourse = () => {
+    if (loadingFlag) {
+      return <></>;
+    }
+
     if (!course) {
       return (
         <>
