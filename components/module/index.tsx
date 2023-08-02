@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "@/lib/contexts/user/context";
 import Unauthorized from "../unauthorized";
 import { LoadingOverlay } from "@mantine/core";
@@ -7,6 +7,9 @@ import { useSingleChunk } from "@/lib/hooks/chunk/use-single-chunk";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Navbar from "../navbar";
+import { IconMenu2 } from "@tabler/icons-react";
+import { useViewportSize } from "@mantine/hooks";
+import { Drawer } from "@mantine/core";
 
 export default function SingleModule() {
   const router = useRouter();
@@ -14,10 +17,18 @@ export default function SingleModule() {
   const { module, isLoading: isModuleLoading } = useSingleModule(
     router.query.id as string
   );
-  const [chunkId, setChunkId] = useState(1);
+  const [chunkIdx, setChunkIdx] = useState(0);
   const { chunk, isLoading: isChunkLoading } = useSingleChunk(
-    chunkId.toString()
+    module?.chunks[chunkIdx].id.toString() || ""
   );
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const navRef = useRef<HTMLDivElement>(null);
+  const [navHeight, setNavHeight] = useState<number>(0);
+  const { height, width } = useViewportSize();
+  useEffect(() => {
+    setNavHeight(navRef.current?.getBoundingClientRect().height || 0);
+  }, [navRef, height, width]);
 
   if (!user.isLoading && user.id === -1) {
     return (
@@ -28,13 +39,83 @@ export default function SingleModule() {
     );
   }
 
+  if (!module && !isModuleLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="wrapper">
+          <h1 className="heading text-white">Modul tidak ditemukan!</h1>
+          <Link
+            href="/course"
+            className="button-primary mt-[1rem] inline-block"
+          >
+            Lihat semua course yang ada
+          </Link>
+        </div>
+      </>
+    );
+  }
+
   const loadingFlag = user.isLoading || isModuleLoading || isChunkLoading;
 
   return (
-    <div className="wrapper">
-      <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
-      <p className="paragraph text-white">{JSON.stringify(module)}</p>
-      <p className="paragraph text-white">{JSON.stringify(chunk)}</p>
-    </div>
+    <>
+      <div className="fixed top-0 left-0 w-full bg-darkgray" ref={navRef}>
+        <div className="wrapper">
+          <div className="flex justify-between items-center">
+            <h1 className="heading text-white max-w-[75%]">
+              {module?.title ?? ""}
+            </h1>
+            <button onClick={() => setIsDrawerOpen(true)}>
+              <IconMenu2 size={32} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <Drawer
+        opened={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        withCloseButton={false}
+        position="right"
+      >
+        <div className="p-[1rem] flex flex-col gap-[1rem]">
+          {module?.chunks.map((chunk, idx) => {
+            if (idx <= chunkIdx) {
+              return (
+                <button
+                  key={chunk.id}
+                  className="button-primary w-full"
+                  onClick={() => setChunkIdx(idx)}
+                >
+                  {chunk.rank}. {chunk.title}
+                </button>
+              );
+            } else {
+              return (
+                <button
+                  key={chunk.id}
+                  className="button-secondary w-full"
+                  onClick={() => setChunkIdx(idx)}
+                >
+                  {chunk.rank}. {chunk.title}
+                </button>
+              );
+            }
+          }) || ""}
+          <Link
+            href={`/unit/${module?.unitId}`}
+            className="button-secondary w-full"
+          >
+            Kembali ke unit
+          </Link>
+        </div>
+      </Drawer>
+      <div style={{ marginTop: `${navHeight}px` }} />
+      <div className="wrapper">
+        <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
+        <p className="paragraph text-white">{JSON.stringify(module)}</p>
+        <p className="paragraph text-white">{JSON.stringify(chunk)}</p>
+      </div>
+    </>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { UserContext } from "@/lib/contexts/user/context";
 import { showSuccess } from "@/lib/notifications";
 import { useRouter } from "next/router";
+import { useViewportSize } from "@mantine/hooks";
 
 export default function Navbar() {
   const [navHeight, setNavHeight] = useState(0);
@@ -11,9 +12,11 @@ export default function Navbar() {
   const user = useContext(UserContext);
   const router = useRouter();
 
+  const { height, width } = useViewportSize();
+
   useEffect(() => {
     setNavHeight(navRef.current?.getBoundingClientRect().height || 0);
-  }, [navRef]);
+  }, [navRef, height, width]);
 
   return (
     <>

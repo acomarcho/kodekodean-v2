@@ -7,6 +7,10 @@ export const useSingleChunk = (id: string) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!id) {
+      return;
+    }
+
     const fetch = async () => {
       try {
         setIsLoading(true);
