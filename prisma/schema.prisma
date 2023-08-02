@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  name      String
-  email     String   @unique
-  password  String
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  name        String
+  email       String       @unique
+  password    String
+  completions Completion[]
 }
 
 model Course {
@@ -37,13 +38,14 @@ model Unit {
 }
 
 model Module {
-  id          Int     @id @default(autoincrement())
-  unit        Unit    @relation(fields: [unitId], references: [id])
+  id          Int          @id @default(autoincrement())
+  unit        Unit         @relation(fields: [unitId], references: [id])
   unitId      Int
   title       String
   description String
   rank        Int
   chunks      Chunk[]
+  completions Completion[]
 }
 
 model Chunk {
@@ -53,4 +55,15 @@ model Chunk {
   title    String
   content  String
   rank     Int
+}
+
+model Completion {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  module    Module   @relation(fields: [moduleId], references: [id])
+  moduleId  Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, moduleId])
 }
