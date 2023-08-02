@@ -53,9 +53,9 @@ export default function SingleCourse() {
                 <div className="flex flex-col gap-[0.5rem]">
                   <h1 className="heading text-white">Unit {unit.rank}</h1>
                   <p className="paragraph text-lightgray">{unit.description}</p>
-                  <p className="paragraph text-green">
+                  {/* <p className="paragraph text-green">
                     0/0 modul sudah Anda selesaikan
-                  </p>
+                  </p> */}
                 </div>
                 <Link
                   href={`/unit/${unit.id}`}

@@ -20,6 +20,7 @@
     "@mantine/next": "^6.0.17",
     "@mantine/notifications": "^6.0.17",
     "@prisma/client": "^5.1.0",
+    "@tabler/icons-react": "^2.30.0",
     "@types/node": "20.4.5",
     "@types/react": "18.2.18",
     "@types/react-dom": "18.2.7",

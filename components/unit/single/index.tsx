@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSingleUnit } from "@/lib/hooks/unit/use-single-unit";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Accordion from "./accordion";
 
 export default function SingleUnit() {
   const router = useRouter();
@@ -42,14 +43,16 @@ export default function SingleUnit() {
             <h1 className="heading text-white">
               Unit {unit.rank}: {unit.description}
             </h1>
-            <p className="paragraph text-lightgray">
+            {/* <p className="paragraph text-lightgray">
               Anda sudah menyelesaikan 0/0 modul pada unit ini.
-            </p>
+            </p> */}
           </div>
           <Image src="/images/course.png" alt="" height={180} width={564} />
         </div>
-        <div className="grid grid-cols-1 gap-[1rem] lg:grid-cols-2 mt-[2rem]">
-          <p className="paragraph">{JSON.stringify(unit.modules)}</p>
+        <div className="grid grid-cols-1 gap-[1rem] mt-[2rem]">
+          {unit.modules.map((module) => {
+            return <Accordion key={module.id} module={module} />;
+          })}
         </div>
       </>
     );
