@@ -6,6 +6,21 @@ export type Course = {
   rank: number;
 };
 
+export type Unit = {
+  id: number;
+  courseId: number;
+  description: string;
+  rank: number;
+};
+
+export type CourseWithUnits = Course & {
+  units: Unit[];
+};
+
 export type GetCoursesResponse = {
   courses: Course[];
+};
+
+export type GetSingleCourseResponse = {
+  course: CourseWithUnits | null;
 };
