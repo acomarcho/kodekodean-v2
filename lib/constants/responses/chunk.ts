@@ -7,5 +7,5 @@ export type Chunk = {
 };
 
 export type GetSingleChunkResponse = {
-  chunk: Chunk;
+  chunk: Chunk | null;
 };
