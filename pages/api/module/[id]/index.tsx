@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {
+  ModuleWithChunks,
   GetSingleModuleResponse,
   ErrorResponse,
 } from "@/lib/constants/responses";
 import { prisma } from "@/lib/db";
 import { checkAuth } from "@/lib/utils";
+import { RedisConnection } from "@/lib/db/redis";
+import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,18 +31,32 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    const _module = await prisma.module.findUnique({
-      where: {
-        id: parseInt(id),
-      },
-      include: {
-        chunks: {
-          orderBy: {
-            rank: "asc",
+    const redisClient = await RedisConnection.getInstance();
+    const redisKey = `module:${id}`;
+    const cachedData = await redisClient.get(redisKey);
+    let _module: ModuleWithChunks | null;
+
+    if (!cachedData) {
+      _module = await prisma.module.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        include: {
+          chunks: {
+            orderBy: {
+              rank: "asc",
+            },
           },
         },
-      },
-    });
+      });
+      await redisClient.setEx(
+        redisKey,
+        DEFAULT_EXPIRATION,
+        JSON.stringify(_module)
+      );
+    } else {
+      _module = JSON.parse(cachedData);
+    }
 
     if (!_module) {
       return res.status(200).json({ module: null });
