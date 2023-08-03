@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {
+  UnitWithModules,
   GetSingleUnitResponse,
   ErrorResponse,
 } from "@/lib/constants/responses";
 import { prisma } from "@/lib/db";
 import { checkAuth } from "@/lib/utils";
+import { RedisConnection } from "@/lib/db/redis";
+import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,18 +31,32 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    const unit = await prisma.unit.findUnique({
-      where: {
-        id: parseInt(id),
-      },
-      include: {
-        modules: {
-          orderBy: {
-            rank: "asc",
+    const redisClient = await RedisConnection.getInstance();
+    const redisKey = `unit:${id}`;
+    const cachedData = await redisClient.get(redisKey);
+    let unit: UnitWithModules | null = null;
+
+    if (!cachedData) {
+      unit = await prisma.unit.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        include: {
+          modules: {
+            orderBy: {
+              rank: "asc",
+            },
           },
         },
-      },
-    });
+      });
+      await redisClient.setEx(
+        redisKey,
+        DEFAULT_EXPIRATION,
+        JSON.stringify(unit)
+      );
+    } else {
+      unit = JSON.parse(cachedData);
+    }
 
     if (!unit) {
       return res.status(200).json({ unit: null });
