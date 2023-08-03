@@ -1,1 +1,1 @@
-export const DEFAULT_EXPIRATION = 300; // 5 minutes
+export const DEFAULT_EXPIRATION = 600; // 10 minutes
