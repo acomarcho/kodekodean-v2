@@ -30,9 +30,7 @@ export default async function handler(
     }
 
     const redisClient = await RedisConnection.getInstance();
-
     const cachedData = await redisClient.get("courses");
-
     let courses: Course[] = [];
 
     if (!cachedData) {

@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {
+  CourseWithUnitsWithModules,
   GetSingleCourseResponse,
   ErrorResponse,
 } from "@/lib/constants/responses";
 import { prisma } from "@/lib/db";
 import { checkAuth } from "@/lib/utils";
+import { RedisConnection } from "@/lib/db/redis";
+import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,25 +31,39 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    const course = await prisma.course.findUnique({
-      where: {
-        id: parseInt(id),
-      },
-      include: {
-        units: {
-          orderBy: {
-            rank: "asc",
-          },
-          include: {
-            modules: {
-              orderBy: {
-                rank: "asc",
+    const redisClient = await RedisConnection.getInstance();
+    const redisKey = `course:${id}`;
+    const cachedData = await redisClient.get(redisKey);
+    let course: CourseWithUnitsWithModules | null;
+
+    if (!cachedData) {
+      course = await prisma.course.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        include: {
+          units: {
+            orderBy: {
+              rank: "asc",
+            },
+            include: {
+              modules: {
+                orderBy: {
+                  rank: "asc",
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+      await redisClient.setEx(
+        redisKey,
+        DEFAULT_EXPIRATION,
+        JSON.stringify(course)
+      );
+    } else {
+      course = JSON.parse(cachedData);
+    }
 
     if (!course) {
       return res.status(200).json({ course: null });
