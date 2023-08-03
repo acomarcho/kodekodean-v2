@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type {
+  Course,
   GetCoursesResponse,
   ErrorResponse,
 } from "@/lib/constants/responses";
 import { prisma } from "@/lib/db";
 import { checkAuth } from "@/lib/utils";
+import { RedisConnection } from "@/lib/db/redis";
+import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,9 +29,24 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    const courses = await prisma.course.findMany({
-      orderBy: { rank: "asc" },
-    });
+    const redisClient = await RedisConnection.getInstance();
+
+    const cachedData = await redisClient.get("courses");
+
+    let courses: Course[] = [];
+
+    if (!cachedData) {
+      courses = await prisma.course.findMany({
+        orderBy: { rank: "asc" },
+      });
+      await redisClient.setEx(
+        "courses",
+        DEFAULT_EXPIRATION,
+        JSON.stringify(courses)
+      );
+    } else {
+      courses = JSON.parse(cachedData);
+    }
 
     return res.status(200).json({ courses });
   } catch (error) {
