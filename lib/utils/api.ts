@@ -1,7 +1,6 @@
-import { prisma } from "../db";
+import { prisma, redis } from "../db";
 import jwt from "jwt-simple";
 import type { User } from "../constants/responses";
-import { RedisConnection } from "@/lib/db/redis";
 import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export const extractToken = (authHeader: string) => {
@@ -18,7 +17,7 @@ export const checkAuth = async (authHeader: string) => {
     return null;
   }
 
-  const redisClient = await RedisConnection.getInstance();
+  const redisClient = await redis.getInstance();
   const redisKey = `user:${decodedJwt.email}`;
   const cachedData = await redisClient.get(redisKey);
 

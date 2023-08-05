@@ -4,9 +4,8 @@ import type {
   GetSingleUnitResponse,
   ErrorResponse,
 } from "@/lib/constants/responses";
-import { prisma } from "@/lib/db";
+import { prisma, redis } from "@/lib/db";
 import { checkAuth } from "@/lib/utils";
-import { RedisConnection } from "@/lib/db/redis";
 import { DEFAULT_EXPIRATION } from "@/lib/constants/redis";
 
 export default async function handler(
@@ -31,7 +30,7 @@ export default async function handler(
       return res.status(401).json({ message: "Identitas Anda salah." });
     }
 
-    const redisClient = await RedisConnection.getInstance();
+    const redisClient = await redis.getInstance();
     const redisKey = `unit:${id}`;
     const cachedData = await redisClient.get(redisKey);
     let unit: UnitWithModules | null = null;
