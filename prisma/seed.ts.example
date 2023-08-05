@@ -1,19 +1,82 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
+const courseSeed = [
+  {
+    id: 1,
+    title: "Berpikir komputasional menggunakan Python",
+    description:
+      "Belajar dasar dari berpikir komputasional dengan memecahkan masalah-masalah menggunakan bahasa Python!",
+    source: "KU1102 Pengenalan Komputasi",
+    rank: 1,
+  },
+];
+
+const unitSeed = [
+  {
+    id: 1,
+    courseId: 1,
+    description: "Memulai pemrograman dengan bahasa Python",
+    rank: 1,
+  },
+];
+
+const moduleSeed = [
+  {
+    id: 1,
+    unitId: 1,
+    title: "Instalasi Python & IDE serta program pertama Anda dalam Python",
+    description:
+      "Mulai belajar Python dari awal dengan menyiapkan lingkungannya!",
+    rank: 1,
+  },
+];
+
+const chunkSeed = [
+  {
+    id: 1,
+    moduleId: 1,
+    title: "Instalasi Python",
+    content:
+      "course-python-1/memulai-pemrograman/instalasi-program-pertama/instalasi-python.md",
+    rank: 1,
+  },
+  {
+    id: 2,
+    moduleId: 1,
+    title: "Instalasi IDE",
+    content:
+      "course-python-1/memulai-pemrograman/instalasi-program-pertama/instalasi-ide.md",
+    rank: 2,
+  },
+  {
+    id: 3,
+    moduleId: 1,
+    title: "Menjalankan Python di browser",
+    content:
+      "course-python-1/memulai-pemrograman/instalasi-program-pertama/python-browser.md",
+    rank: 3,
+  },
+  {
+    id: 4,
+    moduleId: 1,
+    title: "Program pertama dalam Python",
+    content:
+      "course-python-1/memulai-pemrograman/instalasi-program-pertama/program-pertama.md",
+    rank: 4,
+  },
+];
+
 const prisma = new PrismaClient();
 async function main() {
-  await prisma.completion.deleteMany({});
-  await prisma.chunk.deleteMany({});
-  await prisma.module.deleteMany({});
-  await prisma.unit.deleteMany({});
-  await prisma.course.deleteMany({});
-  await prisma.user.deleteMany({});
-
+  console.log(">> Seeding users...");
   const hashedPassword = await bcrypt.hash("helloworld", 12);
-
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: {
+      id: 1,
+    },
+    update: {},
+    create: {
       id: 1,
       name: "Test User",
       email: "test@test.com",
@@ -21,102 +84,65 @@ async function main() {
     },
   });
 
-  await prisma.course.createMany({
-    data: [
-      {
-        id: 1,
-        title: "Pemrograman fungsional menggunakan Haskell",
-        description:
-          "Belajar pemrograman menggunakan paradigma fungsional. Anda akan mempelajari gaya pemrograman fungsional, fungsi rekursif, dan fungsi lambda.",
-        source: "IF1210 Dasar Pemrograman",
-        rank: 1,
+  console.log(">> Seeding courses...");
+  for (const course of courseSeed) {
+    await prisma.course.upsert({
+      where: {
+        id: course.id,
       },
-      {
-        id: 2,
-        title: "Pemrograman prosedural menggunakan Python",
-        description:
-          "Belajar pemrograman menggunakan paradigma prosedural. Anda akan mempelajari gaya pemrograman prosedural dan pemrosesan file.",
-        source: "IF1210 Dasar Pemrograman",
-        rank: 2,
+      update: {
+        ...course,
       },
-    ],
-  });
+      create: {
+        ...course,
+      },
+    });
+  }
 
-  await prisma.unit.createMany({
-    data: [
-      {
-        id: 1,
-        courseId: 1,
-        description: "Paradigma fungsional dan Haskell",
-        rank: 1,
+  console.log(">> Seeding units...");
+  for (const unit of unitSeed) {
+    await prisma.unit.upsert({
+      where: {
+        id: unit.id,
       },
-      {
-        id: 2,
-        courseId: 1,
-        description: "Rekursi sederhana pada Haskell",
-        rank: 2,
+      update: {
+        ...unit,
       },
-      {
-        id: 3,
-        courseId: 1,
-        description: "Pemrosesan list pada Haskell",
-        rank: 3,
+      create: {
+        ...unit,
       },
-      {
-        id: 4,
-        courseId: 1,
-        description: "Fungsi lambda dan fungsi sebagai parameter",
-        rank: 4,
-      },
-    ],
-  });
+    });
+  }
 
-  await prisma.module.createMany({
-    data: [
-      {
-        id: 1,
-        unitId: 1,
-        title: "Apa itu paradigma fungsional?",
-        description: "Ketahui apa yang dimaksud dengan paradigma fungsional!",
-        rank: 1,
+  console.log(">> Seeding modules...");
+  for (const myModule of moduleSeed) {
+    await prisma.module.upsert({
+      where: {
+        id: myModule.id,
       },
-      {
-        id: 2,
-        unitId: 1,
-        title: "Instalasi Haskell",
-        description:
-          "Cara melakukan instalasi compiler Haskell (GHCi) untuk memulai pemrograman dalam Haskell",
-        rank: 2,
+      update: {
+        ...myModule,
       },
-      {
-        id: 3,
-        unitId: 1,
-        title: "Program Haskell pertama Anda",
-        description:
-          "Buat kalkulator sederhana dalam paradigma fungsional menggunakan Haskell",
-        rank: 3,
+      create: {
+        ...myModule,
       },
-    ],
-  });
+    });
+  }
 
-  await prisma.chunk.createMany({
-    data: [
-      {
-        id: 1,
-        moduleId: 1,
-        title: "Output pada Python",
-        content: "sample/output.md",
-        rank: 1,
+  console.log(">> Seeding chunks...");
+  for (const chunk of chunkSeed) {
+    await prisma.chunk.upsert({
+      where: {
+        id: chunk.id,
       },
-      {
-        id: 2,
-        moduleId: 1,
-        title: "Input pada Python",
-        content: "sample/input.md",
-        rank: 2,
+      update: {
+        ...chunk,
       },
-    ],
-  });
+      create: {
+        ...chunk,
+      },
+    });
+  }
 }
 
 main()
