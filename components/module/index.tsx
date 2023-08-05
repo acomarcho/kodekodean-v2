@@ -173,7 +173,7 @@ export default function SingleModule() {
       </div>
       <div style={{ marginBottom: `${footerHeight}px` }} />
       <div
-        className="fixed bottom-0 left-0 right-0 bg-darkgray"
+        className="fixed bottom-0 left-0 right-0 bg-darkgray z-10"
         ref={footerRef}
       >
         <div className="max-w-[1160px] mx-auto px-[2rem] py-[1rem] flex justify-between">
