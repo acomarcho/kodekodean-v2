@@ -7,6 +7,7 @@ import { useSingleUnit } from "@/lib/hooks/unit/use-single-unit";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Accordion from "./accordion";
+import Head from "next/head";
 
 export default function SingleUnit() {
   const router = useRouter();
@@ -49,6 +50,9 @@ export default function SingleUnit() {
 
     return (
       <>
+        <Head>
+          <title>Unit {unit.rank}: {unit.description}</title>
+        </Head>
         <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
           <div>
             <h1 className="heading text-white">

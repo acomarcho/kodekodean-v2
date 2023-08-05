@@ -12,6 +12,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { Drawer } from "@mantine/core";
 import MarkdownRenderer from "./markdown-renderer";
 import axios from "axios";
+import Head from "next/head";
 
 export default function SingleModule() {
   const router = useRouter();
@@ -83,6 +84,9 @@ export default function SingleModule() {
 
   return (
     <>
+      <Head>
+        <title>{module?.title ?? ""}</title>
+      </Head>
       <div className="fixed top-0 left-0 w-full bg-darkgray z-10" ref={navRef}>
         <div className="wrapper">
           <div className="flex justify-between items-center">

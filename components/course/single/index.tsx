@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSingleCourse } from "@/lib/hooks/course/use-single-course";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function SingleCourse() {
   const router = useRouter();
@@ -54,6 +55,9 @@ export default function SingleCourse() {
 
     return (
       <>
+        <Head>
+          <title>{course.title}</title>
+        </Head>
         <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
           <div>
             <h1 className="heading text-white">{course.title}</h1>
