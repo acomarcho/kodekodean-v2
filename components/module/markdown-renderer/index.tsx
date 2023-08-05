@@ -20,6 +20,11 @@ export default function MarkdownRenderer({ children }: { children: string }) {
             {children}
           </h2>
         ),
+        h3: ({ children, ...props }) => (
+          <h3 className="heading !text-[1.125rem] text-lightgray mt-[1rem]" {...props}>
+            {children}
+          </h3>
+        ),
         p: ({ children, ...props }) => (
           <p className="paragraph text-lightgray mt-[1rem]" {...props}>
             {children}
