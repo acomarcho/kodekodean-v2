@@ -12,7 +12,6 @@ import { useViewportSize } from "@mantine/hooks";
 import { Drawer } from "@mantine/core";
 import MarkdownRenderer from "./markdown-renderer";
 import axios from "axios";
-import { log } from "console";
 
 export default function SingleModule() {
   const router = useRouter();
