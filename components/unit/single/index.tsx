@@ -25,7 +25,7 @@ export default function SingleUnit() {
   const loadingFlag = user.isLoading || isUnitLoading;
 
   const relevantCompletions =
-    completions.filter((completion) =>
+    completions?.filter((completion) =>
       unit?.modules.find((module) => module.id === completion.moduleId)
     ) || [];
 
@@ -51,7 +51,9 @@ export default function SingleUnit() {
     return (
       <>
         <Head>
-          <title>Unit {unit.rank}: {unit.description}</title>
+          <title>
+            Unit {unit.rank}: {unit.description}
+          </title>
         </Head>
         <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
           <div>

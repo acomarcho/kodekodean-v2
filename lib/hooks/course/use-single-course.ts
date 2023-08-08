@@ -19,7 +19,7 @@ export const useSingleCourse = (id: string) => {
 
   const course = courseResponse?.course;
   const completions = completionsResponse?.completions;
-  const isLoading = isCourseLoading && isCompletionLoading;
+  const isLoading = isCourseLoading || isCompletionLoading;
 
   return { course, completions, isLoading };
 };
