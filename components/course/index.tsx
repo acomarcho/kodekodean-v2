@@ -23,6 +23,11 @@ export default function Courses() {
   return (
     <div className="wrapper">
       <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
+      <div className="flex flex-wrap gap-[1rem] mb-[1rem]">
+        <Link href="/course" className="paragraph text-white underline">
+          Semua course
+        </Link>
+      </div>
       <div className="flex flex-col gap-[1rem] lg:flex-row lg:items-center">
         <div>
           <h1 className="heading text-white">

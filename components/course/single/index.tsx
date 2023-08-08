@@ -7,6 +7,7 @@ import { useSingleCourse } from "@/lib/hooks/course/use-single-course";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import _ from "lodash";
 
 export default function SingleCourse() {
   const router = useRouter();
@@ -106,6 +107,20 @@ export default function SingleCourse() {
   return (
     <div className="wrapper">
       <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
+      <div className="flex flex-wrap gap-[0.5rem] mb-[1rem]">
+        <Link href="/course" className="paragraph text-white underline">
+          Semua course
+        </Link>
+        <p>{">"}</p>
+        <Link
+          href={`/course/${router.query.id}`}
+          className="paragraph text-white underline"
+        >
+          {_.truncate(course?.title || "", {
+            length: 20,
+          })}
+        </Link>
+      </div>
       {renderCourse()}
     </div>
   );

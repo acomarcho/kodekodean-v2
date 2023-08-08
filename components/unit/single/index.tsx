@@ -4,10 +4,12 @@ import Unauthorized from "../../unauthorized";
 import { LoadingOverlay } from "@mantine/core";
 import Image from "next/image";
 import { useSingleUnit } from "@/lib/hooks/unit/use-single-unit";
+import { useSingleCourse } from "@/lib/hooks/course/use-single-course";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Accordion from "./accordion";
 import Head from "next/head";
+import _ from "lodash";
 
 export default function SingleUnit() {
   const router = useRouter();
@@ -17,12 +19,15 @@ export default function SingleUnit() {
     completions,
     isLoading: isUnitLoading,
   } = useSingleUnit(router.query.id as string);
+  const { course, isLoading: isCourseLoading } = useSingleCourse(
+    (unit?.courseId && (unit?.courseId).toString()) || ""
+  );
 
   if (!user.isLoading && user.id === -1) {
     return <Unauthorized />;
   }
 
-  const loadingFlag = user.isLoading || isUnitLoading;
+  const loadingFlag = user.isLoading || isUnitLoading || isCourseLoading;
 
   const relevantCompletions =
     completions?.filter((completion) =>
@@ -91,6 +96,29 @@ export default function SingleUnit() {
   return (
     <div className="wrapper">
       <LoadingOverlay visible={loadingFlag} overlayBlur={2} />
+      <div className="flex flex-wrap gap-[0.5rem] mb-[1rem]">
+        <Link href="/course" className="paragraph text-white underline">
+          Semua course
+        </Link>
+        <p>{">"}</p>
+        <Link
+          href={`/course/${unit?.courseId}`}
+          className="paragraph text-white underline"
+        >
+          {_.truncate(course?.title || "", {
+            length: 20,
+          })}
+        </Link>
+        <p>{">"}</p>
+        <Link
+          href={`/unit/${router.query.id}`}
+          className="paragraph text-white underline"
+        >
+          {_.truncate(unit?.description || "", {
+            length: 20,
+          })}
+        </Link>
+      </div>
       {renderUnit()}
     </div>
   );
