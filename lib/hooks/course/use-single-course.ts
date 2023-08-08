@@ -1,54 +1,25 @@
 import type {
-  CourseWithUnitsWithModules,
   GetSingleCourseResponse,
   GetCompletionsResponse,
-  Completion,
 } from "@/lib/constants/responses";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils/fetcher";
 
 export const useSingleCourse = (id: string) => {
-  const [course, setCourse] = useState<CourseWithUnitsWithModules | null>(null);
-  const [completions, setCompletions] = useState<Completion[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { data: courseResponse, isLoading: isCourseLoading } =
+    useSWR<GetSingleCourseResponse>(
+      `/api/course/${id}`,
+      fetcher<GetSingleCourseResponse>
+    );
+  const { data: completionsResponse, isLoading: isCompletionLoading } =
+    useSWR<GetCompletionsResponse>(
+      `/api/completion`,
+      fetcher<GetCompletionsResponse>
+    );
 
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-
-    const fetch = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await axios.get<GetSingleCourseResponse>(
-          `/api/course/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          }
-        );
-        setCourse(data.course);
-
-        const { data: data2 } = await axios.get<GetCompletionsResponse>(
-          "/api/completion",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          }
-        );
-        setCompletions(data2.completions);
-      } catch (error) {
-        setCourse(null);
-        setCompletions([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetch();
-  }, [id]);
+  const course = courseResponse?.course;
+  const completions = completionsResponse?.completions;
+  const isLoading = isCourseLoading && isCompletionLoading;
 
   return { course, completions, isLoading };
 };
