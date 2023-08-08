@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "@/lib/contexts/user/context";
 import Unauthorized from "../unauthorized";
 import { LoadingOverlay } from "@mantine/core";
@@ -9,6 +9,10 @@ import Link from "next/link";
 export default function Courses() {
   const user = useContext(UserContext);
   const { courses, isLoading: isCourseLoading } = useAllCourse();
+
+  useEffect(() => {
+    console.log(courses);
+  }, [courses]);
 
   if (!user.isLoading && user.id === -1) {
     return <Unauthorized />;
@@ -34,7 +38,7 @@ export default function Courses() {
         <Image src="/images/course.png" alt="" height={180} width={564} />
       </div>
       <div className="grid grid-cols-1 gap-[1rem] lg:grid-cols-2 mt-[2rem]">
-        {courses.map((course) => {
+        {courses?.map((course) => {
           return (
             <div
               key={course.id}
