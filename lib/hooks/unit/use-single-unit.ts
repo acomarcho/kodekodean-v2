@@ -1,11 +1,7 @@
 import type {
-  UnitWithModules,
   GetSingleUnitResponse,
   GetCompletionsResponse,
-  Completion,
 } from "@/lib/constants/responses";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils/fetcher";
 

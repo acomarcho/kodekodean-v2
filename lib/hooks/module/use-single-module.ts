@@ -1,40 +1,14 @@
-import type {
-  ModuleWithChunks,
-  GetSingleModuleResponse,
-} from "@/lib/constants/responses";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import type { GetSingleModuleResponse } from "@/lib/constants/responses";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils/fetcher";
 
 export const useSingleModule = (id: string) => {
-  const [module, setModule] = useState<ModuleWithChunks | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { data: moduleData, isLoading } = useSWR<GetSingleModuleResponse>(
+    `/api/module/${id}`,
+    fetcher<GetSingleModuleResponse>
+  );
 
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-    
-    const fetch = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await axios.get<GetSingleModuleResponse>(
-          `/api/module/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          }
-        );
-        setModule(data.module);
-      } catch (error) {
-        setModule(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const myModule = moduleData?.module;
 
-    fetch();
-  }, [id]);
-
-  return { module, isLoading };
+  return { module: myModule, isLoading };
 };
