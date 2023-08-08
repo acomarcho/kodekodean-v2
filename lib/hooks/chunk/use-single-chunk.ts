@@ -1,37 +1,14 @@
-import type { Chunk, GetSingleChunkResponse } from "@/lib/constants/responses";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import type { GetSingleChunkResponse } from "@/lib/constants/responses";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils/fetcher";
 
 export const useSingleChunk = (id: string) => {
-  const [chunk, setChunk] = useState<Chunk | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { data: chunkData, isLoading } = useSWR<GetSingleChunkResponse>(
+    `/api/chunk/${id}`,
+    fetcher<GetSingleChunkResponse>
+  );
 
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-
-    const fetch = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await axios.get<GetSingleChunkResponse>(
-          `/api/chunk/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          }
-        );
-        setChunk(data.chunk);
-      } catch (error) {
-        setChunk(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetch();
-  }, [id]);
+  const chunk = chunkData?.chunk;
 
   return { chunk, isLoading };
 };
